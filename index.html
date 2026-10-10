@@ -375,7 +375,7 @@
 </div>
 
 <script>
-    // Supabase Initialization with New Official Credentials
+    // Cleaned Supabase Initialization
     const SUPABASE_URL = 'https://ksbjtgnwiigyouakhbaz.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzYmp0gnwiigyouakhbazIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2MDU1NjUsImV4cCI6MjEwNzE4MTU2NX0.lSDbE2u7HQI8t4ZJUjZo7mEDSvFmZWEs1xMivd5_vV0';
     
@@ -412,8 +412,11 @@
             adminBox.style.display = 'block';
         }
 
-        // Log role change action to Supabase audit_logs
-        await _supabase.from('audit_logs').insert([{ action: 'Preview role changed to ' + role, actor: role }]);
+        try {
+            await _supabase.from('audit_logs').insert([{ action: 'Preview role changed to ' + role, actor: role }]);
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     async function inviteMember() {

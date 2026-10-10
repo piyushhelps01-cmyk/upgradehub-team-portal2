@@ -115,9 +115,12 @@
             font-weight: 700;
             color: var(--purple-main);
             margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .task-item, .team-item, .audit-item {
+        .task-item, .team-item, .audit-item, .policy-item {
             background: #f8fafc;
             border: 1px solid var(--card-border);
             padding: 12px 16px;
@@ -138,30 +141,15 @@
         .badge.assigned { background: #e0f2fe; color: #0369a1; }
         .badge.active { background: #dcfce7; color: #15803d; }
 
-        .chips-container {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-        }
-
-        .chip {
-            background: #f1f5f9;
-            color: var(--text-sub);
-            border: 1px solid var(--card-border);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
+        .btn-purple {
+            background: var(--purple-main);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
             font-weight: 600;
-            white-space: nowrap;
+            font-size: 13px;
             cursor: pointer;
-        }
-
-        .chip.active {
-            background: var(--purple-light);
-            color: var(--purple-main);
-            border-color: #d8b4fe;
         }
 
         /* Bottom Nav */
@@ -189,12 +177,8 @@
             cursor: pointer;
         }
 
-        .nav-btn.active {
-            color: var(--purple-main);
-        }
-
+        .nav-btn.active { color: var(--purple-main); }
         .nav-btn svg { width: 20px; height: 20px; fill: currentColor; }
-
         .view-section { display: none; }
         .view-section.active { display: block; }
     </style>
@@ -205,9 +189,7 @@
     <header>
         <div class="brand-box">
             <div class="brand-logo">UH</div>
-            <div>
-                <h1>Upgrade Hub Portal</h1>
-            </div>
+            <div><h1>Upgrade Hub Portal</h1></div>
         </div>
         <div>
             <select class="role-selector" id="roleDropdown" onchange="changeRole(this.value)">
@@ -223,212 +205,277 @@
     <div id="homeView" class="view-section active">
         <div class="welcome-card">
             <h2>Welcome back</h2>
-            <p>All policies accepted. You are up to date.</p>
+            <p>All governance policies accepted. You are up to date.</p>
             <div class="grid-4">
-                <div class="stat-card">
-                    <span>My tasks</span>
-                    <h3 id="statVal1">2</h3>
-                </div>
-                <div class="stat-card">
-                    <span>Open</span>
-                    <h3 id="statVal2">2</h3>
-                </div>
-                <div class="stat-card">
-                    <span>Overdue</span>
-                    <h3 id="statVal3">1</h3>
-                </div>
-                <div class="stat-card">
-                    <span>Pending policies</span>
-                    <h3 id="statVal4">0</h3>
-                </div>
+                <div class="stat-card"><span>My tasks</span><h3 id="statVal1">0</h3></div>
+                <div class="stat-card"><span>Open</span><h3 id="statVal2">0</h3></div>
+                <div class="stat-card"><span>Members</span><h3 id="statVal3">0</h3></div>
+                <div class="stat-card"><span>Logs</span><h3 id="statVal4">0</h3></div>
             </div>
         </div>
 
         <div class="card">
-            <div class="section-title">Upcoming deadlines</div>
-            <div class="task-item">
-                <div>
-                    <strong>Design login screen</strong>
-                    <div style="font-size: 12px; color: var(--text-sub); margin-top: 2px;">Due 12 Oct</div>
-                </div>
-                <span class="badge in-progress">In progress</span>
-            </div>
-            <div class="task-item">
-                <div>
-                    <strong>Weekly report template</strong>
-                    <div style="font-size: 12px; color: var(--text-sub); margin-top: 2px;">Due 16 Oct</div>
-                </div>
-                <span class="badge assigned">Assigned</span>
-            </div>
+            <div class="section-title">Upcoming Task Deadlines</div>
+            <div id="homeTaskList">Loading tasks...</div>
         </div>
     </div>
 
     <!-- VIEW 2: TASKS -->
     <div id="tasksView" class="view-section">
         <div class="card">
-            <div class="section-title">My tasks</div>
-            <div class="task-item">
-                <div>
-                    <strong>Design login screen</strong>
-                    <div style="font-size: 12px; color: var(--text-sub);">UH-0004 • Due 12 Oct</div>
-                </div>
-                <span class="badge in-progress">In progress</span>
+            <div class="section-title">
+                <span>Task Management</span>
+                <button class="btn-purple" id="addTaskBtn" style="display:none;" onclick="addNewTask()">+ Add Task</button>
             </div>
-            <div class="task-item">
-                <div>
-                    <strong>Weekly report template</strong>
-                    <div style="font-size: 12px; color: var(--text-sub);">UH-0004 • Due 16 Oct</div>
-                </div>
-                <span class="badge assigned">Assigned</span>
-            </div>
+            <div id="fullTaskList">Loading tasks...</div>
         </div>
     </div>
 
     <!-- VIEW 3: TEAM DIRECTORY -->
     <div id="teamView" class="view-section">
         <div class="card">
-            <div class="section-title">Team members</div>
-            <div class="team-item">
-                <div>
-                    <strong>Founder</strong>
-                    <div style="font-size: 11px; color: var(--text-sub);">UH-0001 • Super Admin</div>
-                </div>
-                <span class="badge active">Active</span>
+            <div class="section-title">
+                <span>Team Members</span>
+                <button class="btn-purple" id="inviteMemberBtn" style="display:none;" onclick="inviteMember()">+ Invite Member</button>
             </div>
-            <div class="team-item">
-                <div>
-                    <strong>Admin User</strong>
-                    <div style="font-size: 11px; color: var(--text-sub);">UH-0002 • Admin</div>
-                </div>
-                <span class="badge active">Active</span>
-            </div>
-            <div id="adminActionBox" style="margin-top: 15px; display: none;">
-                <button onclick="inviteMember()" style="width: 100%; background: var(--purple-main); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">Invite member</button>
-            </div>
+            <div id="teamMemberList">Loading team members...</div>
         </div>
     </div>
 
     <!-- VIEW 4: POLICIES -->
     <div id="policiesView" class="view-section">
         <div class="card">
-            <div class="section-title">Policy Center</div>
-            <div class="chips-container">
-                <div class="chip active">All</div>
-                <div class="chip">Joining & Membership</div>
-                <div class="chip">Roles & Responsibilities</div>
-                <div class="chip">Work & Performance</div>
+            <div class="section-title">
+                <span>Policy Center</span>
+                <button class="btn-purple" id="addPolicyBtn" style="display:none;" onclick="addPolicy()">+ Add Policy</button>
             </div>
-            <div style="text-align: center; padding: 30px 10px; color: var(--text-sub); font-size: 13px;">
-                No policies in this category yet. Admins can add them here.
-            </div>
+            <div id="policyList">Loading policies...</div>
         </div>
     </div>
 
     <!-- VIEW 5: SECURITY -->
     <div id="securityView" class="view-section">
         <div class="card">
-            <div class="section-title">Security Center</div>
-            <div class="grid-4" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 15px; background: transparent;">
-                <div class="stat-card" style="background: var(--purple-light); color: var(--purple-main); border-color: #d8b4fe;">
-                    <span style="color: var(--purple-main);">Audit events</span>
-                    <h3 style="color: var(--purple-main);">13</h3>
-                </div>
-                <div class="stat-card" style="background: #f8fafc; color: var(--text-main); border-color: var(--card-border);">
-                    <span style="color: var(--text-sub);">Open requests</span>
-                    <h3 style="color: var(--text-main);">0</h3>
-                </div>
-            </div>
-            <div class="section-title">Audit log</div>
-            <div class="audit-item">
-                <div>
-                    <strong>Preview role changed</strong>
-                    <div style="font-size: 11px; color: var(--text-sub);">By Admin</div>
-                </div>
-                <span style="font-size: 11px; color: var(--text-sub);">10:59 AM</span>
-            </div>
+            <div class="section-title">Security & Governance Audit Log</div>
+            <div id="auditLogList">Loading logs...</div>
         </div>
     </div>
 
     <!-- BOTTOM NAVIGATION -->
     <nav class="nav-bottom">
         <button class="nav-btn active" onclick="switchTab('home')">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            Home
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Home
         </button>
         <button class="nav-btn" onclick="switchTab('tasks')">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-            Tasks
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Tasks
         </button>
-        <button class="nav-btn" onclick="switchTab('team')" id="navTeamBtn">
-            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-            Team
+        <button class="nav-btn" onclick="switchTab('team')">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Team
         </button>
         <button class="nav-btn" onclick="switchTab('policies')">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-            Policies
+            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> Policies
         </button>
         <button class="nav-btn" id="navSecurityBtn" onclick="switchTab('security')" style="display: none;">
-            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-            Security
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg> Security
         </button>
     </nav>
 </div>
 
 <script>
-    // Cleaned Supabase Initialization
     const SUPABASE_URL = 'https://ksbjtgnwiigyouakhbaz.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzYmp0gnwiigyouakhbazIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2MDU1NjUsImV4cCI6MjEwNzE4MTU2NX0.lSDbE2u7HQI8t4ZJUjZo7mEDSvFmZWEs1xMivd5_vV0';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzYmp0Z253aWlneW91YWtoYmF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2MDU1NjUsImV4cCI6MjEwNzE4MTU2NX0.lSDbE2u7HQI8t4ZJUjZo7mEDSvFmZWEs1xMivd5_vV0';
     
     const { createClient } = supabase;
     const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentRole = 'Member';
+
+    window.onload = function() {
+        loadData();
+    };
 
     function switchTab(tabName) {
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
 
         document.getElementById(tabName + 'View').classList.add('active');
-        event.currentTarget.classList.add('active');
+        if(event && event.currentTarget) event.currentTarget.classList.add('active');
     }
 
     async function changeRole(role) {
-        const stat1 = document.getElementById('statVal1');
-        const stat2 = document.getElementById('statVal2');
-        const stat3 = document.getElementById('statVal3');
-        const stat4 = document.getElementById('statVal4');
+        currentRole = role;
         const securityNav = document.getElementById('navSecurityBtn');
-        const adminBox = document.getElementById('adminActionBox');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const inviteMemberBtn = document.getElementById('inviteMemberBtn');
+        const addPolicyBtn = document.getElementById('addPolicyBtn');
 
-        if (role === 'Member') {
-            stat1.innerText = '2'; stat2.innerText = '2'; stat3.innerText = '1'; stat4.innerText = '0';
-            securityNav.style.display = 'none';
-            adminBox.style.display = 'none';
-        } else if (role === 'Team Lead') {
-            stat1.innerText = '4'; stat2.innerText = '4'; stat3.innerText = '1'; stat4.innerText = '0';
-            securityNav.style.display = 'none';
-            adminBox.style.display = 'none';
-        } else if (role === 'Admin' || role === 'Super Admin') {
-            stat1.innerText = '8'; stat2.innerText = '7'; stat3.innerText = '2'; stat4.innerText = '0';
+        if (role === 'Admin' || role === 'Super Admin') {
             securityNav.style.display = 'flex';
-            adminBox.style.display = 'block';
+            if(addTaskBtn) addTaskBtn.style.display = 'block';
+            if(inviteMemberBtn) inviteMemberBtn.style.display = 'block';
+            if(addPolicyBtn) addPolicyBtn.style.display = 'block';
+        } else {
+            securityNav.style.display = 'none';
+            if(addTaskBtn) addTaskBtn.style.display = 'none';
+            if(inviteMemberBtn) inviteMemberBtn.style.display = 'none';
+            if(addPolicyBtn) addPolicyBtn.style.display = 'none';
         }
 
         try {
-            await _supabase.from('audit_logs').insert([{ action: 'Preview role changed to ' + role, actor: role }]);
-        } catch (e) {
-            console.error(e);
+            await _supabase.from('audit_logs').insert([{ action: 'Role switched to ' + role, actor: role }]);
+            loadAuditLogs();
+        } catch(e) { console.error(e); }
+    }
+
+    async function loadData() {
+        loadTasks();
+        loadTeam();
+        loadPolicies();
+        loadAuditLogs();
+    }
+
+    async function loadTasks() {
+        const { data: tasks, error } = await _supabase.from('tasks').select('*');
+        if (error) return;
+
+        document.getElementById('statVal1').innerText = tasks ? tasks.length : 0;
+        document.getElementById('statVal2').innerText = tasks ? tasks.filter(t => t.status !== 'Completed').length : 0;
+
+        let html = '';
+        if(!tasks || tasks.length === 0) {
+            html = '<div style="color:var(--text-sub); font-size:13px;">No tasks assigned yet.</div>';
+        } else {
+            tasks.forEach(task => {
+                html += `
+                <div class="task-item">
+                    <div>
+                        <strong>${task.title}</strong>
+                        <div style="font-size: 12px; color: var(--text-sub);">Assigned to: ${task.assigned_to} • Due: ${task.due_date || 'N/A'}</div>
+                    </div>
+                    <span class="badge in-progress">${task.status}</span>
+                </div>`;
+            });
         }
+        document.getElementById('homeTaskList').innerHTML = html;
+        document.getElementById('fullTaskList').innerHTML = html;
+    }
+
+    async function loadTeam() {
+        const { data: profiles, error } = await _supabase.from('profiles').select('*');
+        if (error) return;
+
+        document.getElementById('statVal3').innerText = profiles ? profiles.length : 0;
+
+        let html = '';
+        if(!profiles || profiles.length === 0) {
+            html = '<div style="color:var(--text-sub); font-size:13px;">No members added yet.</div>';
+        } else {
+            profiles.forEach(m => {
+                html += `
+                <div class="team-item">
+                    <div>
+                        <strong>${m.full_name}</strong>
+                        <div style="font-size: 11px; color: var(--text-sub);">${m.member_id} • ${m.department} (${m.role})</div>
+                    </div>
+                    <span class="badge active">${m.status}</span>
+                </div>`;
+            });
+        }
+        document.getElementById('teamMemberList').innerHTML = html;
+    }
+
+    async function loadPolicies() {
+        const { data: policies, error } = await _supabase.from('policies').select('*');
+        if (error) return;
+
+        let html = '';
+        if(!policies || policies.length === 0) {
+            html = '<div style="color:var(--text-sub); font-size:13px; text-align:center; padding:20px;">No governance policies created yet.</div>';
+        } else {
+            policies.forEach(p => {
+                html += `
+                <div class="policy-item">
+                    <div>
+                        <strong>${p.title}</strong>
+                        <div style="font-size:12px; color:var(--text-sub); margin-top:4px;">${p.content}</div>
+                    </div>
+                    <span class="badge assigned">${p.category}</span>
+                </div>`;
+            });
+        }
+        document.getElementById('policyList').innerHTML = html;
+    }
+
+    async function loadAuditLogs() {
+        const { data: logs, error } = await _supabase.from('audit_logs').select('*').order('created_at', { ascending: false });
+        if (error) return;
+
+        document.getElementById('statVal4').innerText = logs ? logs.length : 0;
+
+        let html = '';
+        if(!logs || logs.length === 0) {
+            html = '<div style="color:var(--text-sub); font-size:13px;">No audit events recorded.</div>';
+        } else {
+            logs.forEach(log => {
+                html += `
+                <div class="audit-item">
+                    <div>
+                        <strong>${log.action}</strong>
+                        <div style="font-size: 11px; color: var(--text-sub);">Actor: ${log.actor}</div>
+                    </div>
+                    <span style="font-size: 11px; color: var(--text-sub);">${new Date(log.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>`;
+            });
+        }
+        document.getElementById('auditLogList').innerHTML = html;
     }
 
     async function inviteMember() {
-        const email = prompt("Enter new member email:");
-        if (!email) return;
+        const name = prompt("Member Name:");
+        const email = prompt("Member Email:");
+        const dept = prompt("Department (e.g. Design, Tech):");
+        if (!name || !email) return;
 
-        const { error } = await _supabase.from('profiles').insert([{ member_id: 'UH-' + Math.floor(1000 + Math.random() * 9000), full_name: 'New Member', email: email, department: 'General' }]);
-        if (error) {
-            alert('Error inviting member: ' + error.message);
-        } else {
-            alert('Member invitation saved successfully to Supabase database!');
-        }
+        await _supabase.from('profiles').insert([{ 
+            member_id: 'UH-' + Math.floor(1000 + Math.random() * 9000), 
+            full_name: name, 
+            email: email, 
+            department: dept || 'General',
+            role: 'Member'
+        }]);
+        alert('Member added successfully!');
+        loadTeam();
+    }
+
+    async function addNewTask() {
+        const title = prompt("Task Title:");
+        const assignedTo = prompt("Assign To (Name):");
+        const dueDate = prompt("Due Date (e.g. 15 Oct):");
+        if(!title) return;
+
+        await _supabase.from('tasks').insert([{
+            title: title,
+            assigned_to: assignedTo || 'Unassigned',
+            due_date: dueDate || 'Today',
+            status: 'Assigned'
+        }]);
+        alert('Task created successfully!');
+        loadTasks();
+    }
+
+    async function addPolicy() {
+        const title = prompt("Policy Title:");
+        const category = prompt("Category (e.g. Governance, Tech):");
+        const content = prompt("Policy Content/Description:");
+        if(!title) return;
+
+        await _supabase.from('policies').insert([{
+            title: title,
+            category: category || 'General',
+            content: content || 'No details'
+        }]);
+        alert('Policy added successfully!');
+        loadPolicies();
     }
 </script>
 

@@ -17,8 +17,6 @@
             --text-main: #1e293b;
             --text-sub: #64748b;
             --success: #16a34a;
-            --warning: #d97706;
-            --danger: #dc2626;
         }
 
         body {
@@ -138,9 +136,7 @@
         }
         .badge.in-progress { background: #fef3c7; color: #b45309; }
         .badge.assigned { background: #e0f2fe; color: #0369a1; }
-        .badge.review { background: #f3e8ff; color: #7e22ce; }
         .badge.active { background: #dcfce7; color: #15803d; }
-        .badge.pending { background: #fee2e2; color: #b91c1c; }
 
         .chips-container {
             display: flex;
@@ -230,19 +226,19 @@
             <p>All policies accepted. You are up to date.</p>
             <div class="grid-4">
                 <div class="stat-card">
-                    <span id="statLabel1">My tasks</span>
+                    <span>My tasks</span>
                     <h3 id="statVal1">2</h3>
                 </div>
                 <div class="stat-card">
-                    <span id="statLabel2">Open</span>
+                    <span>Open</span>
                     <h3 id="statVal2">2</h3>
                 </div>
                 <div class="stat-card">
-                    <span id="statLabel3">Overdue</span>
+                    <span>Overdue</span>
                     <h3 id="statVal3">1</h3>
                 </div>
                 <div class="stat-card">
-                    <span id="statLabel4">Pending policies</span>
+                    <span>Pending policies</span>
                     <h3 id="statVal4">0</h3>
                 </div>
             </div>
@@ -265,31 +261,25 @@
                 <span class="badge assigned">Assigned</span>
             </div>
         </div>
-        
-        <div style="font-size: 11px; color: var(--text-sub); text-align: center; margin-top: 15px;">
-            Preview mode: switch the role at the top to see how each role gets different screens. Supabase RLS enforces this on the server.
-        </div>
     </div>
 
     <!-- VIEW 2: TASKS -->
     <div id="tasksView" class="view-section">
         <div class="card">
-            <div class="section-title" id="taskHeaderTitle">My tasks</div>
-            <div id="taskListContainer">
-                <div class="task-item">
-                    <div>
-                        <strong>Design login screen</strong>
-                        <div style="font-size: 12px; color: var(--text-sub);">UH-0004 • Due 12 Oct</div>
-                    </div>
-                    <span class="badge in-progress">In progress</span>
+            <div class="section-title">My tasks</div>
+            <div class="task-item">
+                <div>
+                    <strong>Design login screen</strong>
+                    <div style="font-size: 12px; color: var(--text-sub);">UH-0004 • Due 12 Oct</div>
                 </div>
-                <div class="task-item">
-                    <div>
-                        <strong>Weekly report template</strong>
-                        <div style="font-size: 12px; color: var(--text-sub);">UH-0004 • Due 16 Oct</div>
-                    </div>
-                    <span class="badge assigned">Assigned</span>
+                <span class="badge in-progress">In progress</span>
+            </div>
+            <div class="task-item">
+                <div>
+                    <strong>Weekly report template</strong>
+                    <div style="font-size: 12px; color: var(--text-sub);">UH-0004 • Due 16 Oct</div>
                 </div>
+                <span class="badge assigned">Assigned</span>
             </div>
         </div>
     </div>
@@ -298,38 +288,22 @@
     <div id="teamView" class="view-section">
         <div class="card">
             <div class="section-title">Team members</div>
-            <div id="teamListContainer">
-                <div class="team-item">
-                    <div>
-                        <strong>Founder</strong>
-                        <div style="font-size: 11px; color: var(--text-sub);">UH-0001 • Super Admin</div>
-                    </div>
-                    <span class="badge active">Active</span>
+            <div class="team-item">
+                <div>
+                    <strong>Founder</strong>
+                    <div style="font-size: 11px; color: var(--text-sub);">UH-0001 • Super Admin</div>
                 </div>
-                <div class="team-item">
-                    <div>
-                        <strong>Admin User</strong>
-                        <div style="font-size: 11px; color: var(--text-sub);">UH-0002 • Admin</div>
-                    </div>
-                    <span class="badge active">Active</span>
+                <span class="badge active">Active</span>
+            </div>
+            <div class="team-item">
+                <div>
+                    <strong>Admin User</strong>
+                    <div style="font-size: 11px; color: var(--text-sub);">UH-0002 • Admin</div>
                 </div>
-                <div class="team-item">
-                    <div>
-                        <strong>Team Lead</strong>
-                        <div style="font-size: 11px; color: var(--text-sub);">UH-0003 • Team Lead</div>
-                    </div>
-                    <span class="badge active">Active</span>
-                </div>
-                <div class="team-item">
-                    <div>
-                        <strong>Member One</strong>
-                        <div style="font-size: 11px; color: var(--text-sub);">UH-0004 • Member</div>
-                    </div>
-                    <span class="badge active">Active</span>
-                </div>
+                <span class="badge active">Active</span>
             </div>
             <div id="adminActionBox" style="margin-top: 15px; display: none;">
-                <button style="width: 100%; background: var(--purple-main); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">Invite member</button>
+                <button onclick="inviteMember()" style="width: 100%; background: var(--purple-main); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">Invite member</button>
             </div>
         </div>
     </div>
@@ -343,7 +317,6 @@
                 <div class="chip">Joining & Membership</div>
                 <div class="chip">Roles & Responsibilities</div>
                 <div class="chip">Work & Performance</div>
-                <div class="chip">Technology</div>
             </div>
             <div style="text-align: center; padding: 30px 10px; color: var(--text-sub); font-size: 13px;">
                 No policies in this category yet. Admins can add them here.
@@ -351,18 +324,18 @@
         </div>
     </div>
 
-    <!-- VIEW 5: SECURITY (Admin/Super Admin Only) -->
+    <!-- VIEW 5: SECURITY -->
     <div id="securityView" class="view-section">
         <div class="card">
             <div class="section-title">Security Center</div>
-            <div class="grid-4" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 15px;">
+            <div class="grid-4" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 15px; background: transparent;">
                 <div class="stat-card" style="background: var(--purple-light); color: var(--purple-main); border-color: #d8b4fe;">
                     <span style="color: var(--purple-main);">Audit events</span>
                     <h3 style="color: var(--purple-main);">13</h3>
                 </div>
-                <div class="stat-card" style="background: #f8fafc; color: var(--text-main);">
-                    <span>Open access requests</span>
-                    <h3>0</h3>
+                <div class="stat-card" style="background: #f8fafc; color: var(--text-main); border-color: var(--card-border);">
+                    <span style="color: var(--text-sub);">Open requests</span>
+                    <h3 style="color: var(--text-main);">0</h3>
                 </div>
             </div>
             <div class="section-title">Audit log</div>
@@ -372,13 +345,6 @@
                     <div style="font-size: 11px; color: var(--text-sub);">By Admin</div>
                 </div>
                 <span style="font-size: 11px; color: var(--text-sub);">10:59 AM</span>
-            </div>
-            <div class="audit-item">
-                <div>
-                    <strong>Preview role changed</strong>
-                    <div style="font-size: 11px; color: var(--text-sub);">By Team Lead</div>
-                </div>
-                <span style="font-size: 11px; color: var(--text-sub);">10:58 AM</span>
             </div>
         </div>
     </div>
@@ -409,6 +375,13 @@
 </div>
 
 <script>
+    // Supabase Initialization with New Official Credentials
+    const SUPABASE_URL = 'https://ksbjtgnwiigyouakhbaz.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzYmp0gnwiigyouakhbazIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2MDU1NjUsImV4cCI6MjEwNzE4MTU2NX0.lSDbE2u7HQI8t4ZJUjZo7mEDSvFmZWEs1xMivd5_vV0';
+    
+    const { createClient } = supabase;
+    const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     function switchTab(tabName) {
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
@@ -417,7 +390,7 @@
         event.currentTarget.classList.add('active');
     }
 
-    function changeRole(role) {
+    async function changeRole(role) {
         const stat1 = document.getElementById('statVal1');
         const stat2 = document.getElementById('statVal2');
         const stat3 = document.getElementById('statVal3');
@@ -433,18 +406,28 @@
             stat1.innerText = '4'; stat2.innerText = '4'; stat3.innerText = '1'; stat4.innerText = '0';
             securityNav.style.display = 'none';
             adminBox.style.display = 'none';
-        } else if (role === 'Admin') {
-            stat1.innerText = '6'; stat2.innerText = '5'; stat3.innerText = '2'; stat4.innerText = '0';
-            securityNav.style.display = 'flex';
-            adminBox.style.display = 'block';
-        } else if (role === 'Super Admin') {
+        } else if (role === 'Admin' || role === 'Super Admin') {
             stat1.innerText = '8'; stat2.innerText = '7'; stat3.innerText = '2'; stat4.innerText = '0';
             securityNav.style.display = 'flex';
             adminBox.style.display = 'block';
+        }
+
+        // Log role change action to Supabase audit_logs
+        await _supabase.from('audit_logs').insert([{ action: 'Preview role changed to ' + role, actor: role }]);
+    }
+
+    async function inviteMember() {
+        const email = prompt("Enter new member email:");
+        if (!email) return;
+
+        const { error } = await _supabase.from('profiles').insert([{ member_id: 'UH-' + Math.floor(1000 + Math.random() * 9000), full_name: 'New Member', email: email, department: 'General' }]);
+        if (error) {
+            alert('Error inviting member: ' + error.message);
+        } else {
+            alert('Member invitation saved successfully to Supabase database!');
         }
     }
 </script>
 
 </body>
-  </html>
-    
+</html>
